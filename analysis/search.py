@@ -18,22 +18,26 @@ def main(argv):
          outputfile = arg
     if(directory == ''):
         print ('usage is: search.py -d <inputdirectory> -o <outputfile>')
+        sys.exit(2)
     if(outputfile == ''):
         print ('usage is: search.py -d <inputdirectory> -o <outputfile>')
-    
+        sys.exit(2)
+    if(os.path.isdir(directory) == False):
+        print ('error: ', directory, ' is not a valid directory')
+        sys.exit(2)
     data = {}
+    for dirpath, dirs, files in os.walk(directory):
+      for filename in files:
+        fname = os.path.join(dirpath,filename)
+        if fname.endswith('.java'):
+            print(fname)
+        #   with open(fname) as myfile:
+        #     line = myfile.read()
+        #     c = line.count('bogo_sq')
+        #     if c > 1:
+        #       print fname, c
     
-    # for dirpath, dirs, files in os.walk("."):
-    #   for filename in files:
-    #     fname = os.path.join(dirpath,filename)
-    #     if fname.endswith('.java'):
-    #       with open(fname) as myfile:
-    #         line = myfile.read()
-    #         c = line.count('bogo_sq')
-    #         if c > 1:
-    #           print fname, c
-    
-    with open('data.txt', 'w') as outfile:
+    with open(outputfile, 'w') as outfile:
         json.dump(data, outfile)
 
 if __name__ == "__main__":
@@ -46,3 +50,26 @@ if __name__ == "__main__":
 # vartype
 # class
 # method
+
+# Stack: [class, method, if, while]
+# while
+#   read line
+#   if class
+#     add name
+#     add stack
+#     break
+#   if method
+#     add name
+#     add stack
+#     break
+#   if var
+#     add name
+#     break
+#   if ends with open bracket
+#     add stack
+#   if closing bracket
+#     decrement stack
+#   linenumber++
+# addName()
+#   getClassName
+#   getMethodName
