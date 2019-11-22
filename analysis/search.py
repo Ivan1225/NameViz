@@ -4,14 +4,14 @@ import getopt, sys
 import re
 
 class Name:
-    def __init__(self, name, filename, line, nametype, vartype):
+    def __init__(self, name, filename, line, nametype, vartype, parent):
         self.name = name
         self.filename = filename
         self.line = line
         self.nametype = nametype
         self.vartype = vartype
         self.subnames = []
-        
+        self.parent = parent
     def addName(self, name):
         self.subnames.append(name)
 
@@ -51,7 +51,7 @@ def main(argv):
               for line in myfile:
                 #   classmatch = re.search('class (?<=abc)', line)
                 #   if classmatch.group(0)
-                #     newNode = Name(classmatch.group(0), filename, linecount, 'ClassName', None)
+                #     newNode = Name(classmatch.group(0), filename, linecount, 'ClassName', None, currentNode)
                 #     currentNode.addName(newNode)
                 #     currentnode = newNode
                 #     stack.append('Class')
