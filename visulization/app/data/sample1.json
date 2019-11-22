@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Game",
+    "fileName": "Game",
+    "filePath": "src/ast/Game.java",
+    "line": 1,
+    "isOutlier": false,
+    "nametype": "Class",
+    "variableType": "",
+    "subnames": [
+      {
+        "name": "GetName",
+        "fileName": "Game",
+        "filePath": "src/ast/Game.java",
+        "line": 5,
+        "isOutlier": false,
+        "nametype": "Method",
+        "variableType": "",
+        "subnames": "",
+        "errorMessage": ""
+      },
+      {
+        "name": "g",
+        "fileName": "Game",
+        "filePath": "src/ast/Game.java",
+        "line": 10,
+        "isOutlier": false,
+        "nametype": "Variable",
+        "variableType": "Game",
+        "subnames": "",
+        "errorMessage": ""
+      }
+    ],
+    "errorMessage": ""
+  },
+  {
+    "name": "player",
+    "fileName": "player",
+    "filePath": "src/ast/player.java",
+    "line": 1,
+    "isOutlier": true,
+    "nametype": "Class",
+    "variableType": "",
+    "subnames": "",
+    "errorMessage": "Failed the CamelCase convention"
+  }
+]
