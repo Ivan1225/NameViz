@@ -1,6 +1,19 @@
 import json
 import os
 import getopt, sys
+import re
+
+class Name:
+    def __init__(self, name, filename, line, nametype, vartype):
+        self.name = name
+        self.filename = filename
+        self.line = line
+        self.nametype = nametype
+        self.vartype = vartype
+        self.subnames = []
+        
+    def addName(self, name):
+        self.subnames.append(name)
 
 def main(argv):
 
@@ -25,51 +38,41 @@ def main(argv):
     if(os.path.isdir(directory) == False):
         print ('error: ', directory, ' is not a valid directory')
         sys.exit(2)
-    data = {}
+    data = []
+    stack = []
     for dirpath, dirs, files in os.walk(directory):
       for filename in files:
         fname = os.path.join(dirpath,filename)
         if fname.endswith('.java'):
-            print(fname)
-        #   with open(fname) as myfile:
-        #     line = myfile.read()
-        #     c = line.count('bogo_sq')
-        #     if c > 1:
-        #       print fname, c
+          currentnode = Name(None, filename, None, None, None)
+          data.append(currentnode)
+          linecount = 0
+          with open(fname) as myfile:
+              for line in myfile:
+                #   classmatch = re.search('class (?<=abc)', line)
+                #   if classmatch.group(0)
+                #     newNode = Name(classmatch.group(0), filename, linecount, 'ClassName', None)
+                #     currentNode.addName(newNode)
+                #     currentnode = newNode
+                #     stack.append('Class')
+                #     continue
+                #   elif method
+                #     add name
+                #     add stack
+                #     continue
+                #   elif var
+                #     add name
+                #     continue
+                #   elif ends with open bracket
+                #     add stack
+                #   elif closing bracket
+                #     decrement stack
+                #     *** you need someway to check here if you need to go back up the tree.
+                #     *** such as always name classes 'class' and then check if the top element is 'class'
+                #   linenumber++
     
     with open(outputfile, 'w') as outfile:
         json.dump(data, outfile)
 
 if __name__ == "__main__":
    main(sys.argv[1:])
-   
-# name
-# filename
-# linenumber
-# type
-# vartype
-# class
-# method
-
-# Stack: [class, method, if, while]
-# while
-#   read line
-#   if class
-#     add name
-#     add stack
-#     break
-#   if method
-#     add name
-#     add stack
-#     break
-#   if var
-#     add name
-#     break
-#   if ends with open bracket
-#     add stack
-#   if closing bracket
-#     decrement stack
-#   linenumber++
-# addName()
-#   getClassName
-#   getMethodName
