@@ -3,10 +3,10 @@ from bokeh.plotting import figure
 
 # function to build network graph tab
 
-def network_tab(data):
+def sample_tab(data):
     # build the network tab
 
-     # prepare some data
+    # prepare some data
     x = [1, 2, 3, 4, 5]
     y = [6, 7, 2, 4, 5]
 
@@ -18,5 +18,5 @@ def network_tab(data):
 
     # show the results
 
-    tab = Panel(child = p, title = 'Network graph')
+    tab = Panel(child = p, title = 'Sample graph')
     return tab
