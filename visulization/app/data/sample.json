@@ -1,8 +1,10 @@
 [
     {
         "name" : "main",
-        "fileName": "src/helloworld.java",
+        "fileName": "helloworld.java",
+        "filePath": "src/helloworld.java",
         "lineNumber": 3,
+        "position" : 4,
         "isOutlier" : false,
         "type" : "method",
         "variableType" : "",
@@ -11,16 +13,20 @@
     },
     {
         "name" : "hello",
-        "fileName": "src/helloworld2.java",
+        "fileName": "helloworld2.java",
+        "filePath": "src/helloworld2.java",
         "lineNumber": 1,
+        "position" : 4,
         "isOutlier" : false,
         "type" : "class",
         "variableType" : "",
         "subNames" : [
             {
                 "name" : "TIME",
-                "fileName": "src/helloworld2.java",
+                "fileName": "helloworld2.java",
+                "filePath": "src/helloworld2.java",
                 "lineNumber": 2,
+                "position" : 4,
                 "isOutlier" : false,
                 "type" : "constant",
                 "variableType" : "",
@@ -29,16 +35,20 @@
             },
             {
                 "name" : "main",
-                "fileName": "src/helloworld2.java",
+                "fileName": "helloworld2.java",
+                "filePath": "src/helloworld2.java",
                 "lineNumber": 3,
+                "position" : 4,
                 "isOutlier" : false,
                 "type" : "method",
                 "variableType" : "",
                 "subNames" : [
                     {
                         "name" : "Haha",
-                        "fileName": "src/helloworld2.java",
+                        "fileName": "helloworld2.java",
+                        "filePath": "src/helloworld2.java",
                         "lineNumber": 5,
+                        "position" : 4,
                         "isOutlier" : true,
                         "type" : "variable",
                         "variableType" : "string",
