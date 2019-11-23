@@ -63,22 +63,22 @@ def main(argv):
                   newNode = Name(classmatch.group(0).strip(), filename, linecount, 'ClassName', None, currentNode)
                   currentNode.addName(newNode)
                   stack.append('node')
-                  currentnode = newNode
+                  currentNode = newNode
                 elif interfacematch != None:
                   newNode = Name(interfacematch.group(0).strip(), filename, linecount, 'InterfaceName', None, currentNode)
                   currentNode.addName(newNode)
                   stack.append('node')
-                  currentnode = newNode
+                  currentNode = newNode
                 elif enummatch != None:
                   newNode = Name(enummatch.group(0).strip(), filename, linecount, 'EnumName', None, currentNode)
                   currentNode.addName(newNode)
                   stack.append('node')
-                  currentnode = newNode
+                  currentNode = newNode
                 elif methodmatch != None:
                   newNode = Name(methodmatch.group(0).strip(), filename, linecount, 'MethodName', None, currentNode)
                   currentNode.addName(newNode)
                   stack.append('node')
-                  currentnode = newNode
+                  currentNode = newNode
                 elif varmatch != None:
                   newNode = Name(varmatch.group(0).strip(), filename, linecount, 'VariableName', None, currentNode)
                   currentNode.addName(newNode)
