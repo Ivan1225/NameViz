@@ -54,9 +54,9 @@ def main(argv):
                 classmatch = re.search('(?<=class)(\s)+[^\s]+', line)
                 interfacematch = re.search('(?<=interface)(\s)+[^\s]+', line)
                 enummatch = re.search('(?<=enum)(\s)+[^\s]+', line)
-                methodmatch = re.search('[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=\(([a-zA-Z]+[a-zA-Z0-9$_]*)+ ([a-zA-Z]+[a-zA-Z0-9$_]*)+( *(,|\))))', line)
-                varmatch = re.search('(?!static)[a-zA-Z]+[a-zA-Z0-9$_]*( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;))', line)
-                constantmatch = re.search('static( +)[a-zA-Z]+[a-zA-Z0-9$_]*( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;))', line)
+                methodmatch = re.search('[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=\(([a-zA-Z]+[a-zA-Z0-9$_]*((\[\])|(<[a-zA-Z]+[a-zA-Z0-9$_]*>))?)+ ([a-zA-Z]+[a-zA-Z0-9$_]*)+( *(,|\))))', line)
+                varmatch = re.findall('([a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)?( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;)))', line)
+                constantmatch = re.findall('static( +)([a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)?( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;)))', line)
                 openbracketmatch = re.search('{', line)
                 closebracketmatch = re.search('}', line)
                 if classmatch != None:
@@ -79,12 +79,21 @@ def main(argv):
                   currentNode.addName(newNode)
                   stack.append('node')
                   currentnode = newNode
-                elif varmatch != None:
-                  newNode = Name(varmatch.group(0).strip(), filename, linecount, 'VariableName', None, currentNode)
-                  currentNode.addName(newNode)
-                elif constantmatch != None:
-                  newNode = Name(varmatch.group(0).strip(), filename, linecount, 'ConstantName', None, currentNode)
-                  currentNode.addName(newNode)
+                elif varmatch != []:
+                  for match in varmatch:
+                    nameWithType = match[0].strip()
+                    nameTypeArr = nameWithType.split(' ')
+                    name = nameTypeArr[len(nameTypeArr) - 1]
+                    vartype = nameTypeArr[0]
+                    nameType = 'VariableName'
+                    if constantmatch != []:
+                      for cons in constantmatch:
+                        if (match[0] in cons):
+                          nameType = 'ConstantName'
+                          break
+                    if (vartype != 'return'):
+                      newNode = Name(name, filename, linecount, nameType, vartype, currentNode)
+                      currentNode.addName(newNode)
                 if openbracketmatch != None:
                   stack.append('{')
                 if closebracketmatch != None:
