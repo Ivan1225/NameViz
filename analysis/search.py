@@ -39,37 +39,64 @@ def main(argv):
         print ('error: ', directory, ' is not a valid directory')
         sys.exit(2)
     data = []
-    stack = []
+    nodestack = []
+    bracketstack = []
     for dirpath, dirs, files in os.walk(directory):
       for filename in files:
         fname = os.path.join(dirpath,filename)
         if fname.endswith('.java'):
-          currentnode = Name(None, filename, None, None, None)
-          data.append(currentnode)
+          currentNode = Name(None, filename, None, None, None, None)
+          data.append(currentNode)
           linecount = 0
           with open(fname) as myfile:
-              for line in myfile:
-                #   classmatch = re.search('class (?<=abc)', line)
-                #   if classmatch.group(0)
-                #     newNode = Name(classmatch.group(0), filename, linecount, 'ClassName', None, currentNode)
-                #     currentNode.addName(newNode)
-                #     currentnode = newNode
-                #     stack.append('Class')
-                #     continue
-                #   elif method
-                #     add name
-                #     add stack
-                #     continue
-                #   elif var
-                #     add name
-                #     continue
-                #   elif ends with open bracket
-                #     add stack
-                #   elif closing bracket
-                #     decrement stack
-                #     *** you need someway to check here if you need to go back up the tree.
-                #     *** such as always name classes 'class' and then check if the top element is 'class'
-                #   linenumber++
+            for line in myfile:
+                classmatch = re.search('(?<=class)(\s)+[^\s]+', line)
+                interfacematch = re.search('(?<=interface)(\s)+[^\s]+', line)
+                enummatch = re.search('(?<=enum)(\s)+[^\s]+', line)
+                methodmatch = re.search()
+                varmatch = re.search()
+                constantmatch = re.search()
+                openbracketmatch = re.search('{')
+                closebracketmatch = re.search('}')
+                if classmatch != None:
+                  newNode = Name(classmatch.group(0).strip(), filename, linecount, 'ClassName', None, currentNode)
+                  currentNode.addName(newNode)
+                  nodestack.append(currentNode)
+                  currentnode = newNode
+                  continue
+                elif interfacematch != None:
+                  newNode = Name(interfacematch.group(0).strip(), filename, linecount, 'InterfaceName', None, currentNode)
+                  currentNode.addName(newNode)
+                  nodestack.append(currentNode)
+                  currentnode = newNode
+                  continue
+                elif enummatch != None:
+                  newNode = Name(enummatch.group(0).strip(), filename, linecount, 'EnumName', None, currentNode)
+                  currentNode.addName(newNode)
+                  nodestack.append(currentNode)
+                  currentnode = newNode
+                  continue
+                elif methodmatch != None:
+                  newNode = Name(methodmatch.group(0).strip(), filename, linecount, 'MethodName', None, currentNode)
+                  currentNode.addName(newNode)
+                  nodestack.append(currentNode)
+                  currentnode = newNode
+                  continue
+                elif varmatch != None:
+                  newNode = Name(varmatch.group(0).strip(), filename, linecount, 'VariableName', None, currentNode)
+                  currentNode.addName(newNode)
+                  continue
+                elif constantmatch != None:
+                  newNode = Name(varmatch.group(0).strip(), filename, linecount, 'ConstantName', None, currentNode)
+                  currentNode.addName(newNode)
+                  continue
+                if openbracketmatch != None:
+                  bracketstack.append('{')
+                if closebracketmatch != None:
+                  bracketstack.pop()
+                  if bracketstack.count == 0:
+                    currentnode = nodestack.pop()
+                linecount += 1
     
     with open(outputfile, 'w') as outfile:
         json.dump(data, outfile)
