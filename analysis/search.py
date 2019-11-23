@@ -1,4 +1,5 @@
 import json
+import jsonpickle
 import os
 import getopt, sys
 import re
@@ -39,13 +40,13 @@ def main(argv):
         print ('error: ', directory, ' is not a valid directory')
         sys.exit(2)
     data = []
-    nodestack = []
-    bracketstack = []
+    stack = []
     for dirpath, dirs, files in os.walk(directory):
       for filename in files:
         fname = os.path.join(dirpath,filename)
         if fname.endswith('.java'):
-          currentNode = Name(None, filename, None, None, None, None)
+          topNode = Name(None, filename, None, None, None, None)
+          currentNode = topNode
           data.append(currentNode)
           linecount = 0
           with open(fname) as myfile:
@@ -61,45 +62,43 @@ def main(argv):
                 if classmatch != None:
                   newNode = Name(classmatch.group(0).strip(), filename, linecount, 'ClassName', None, currentNode)
                   currentNode.addName(newNode)
-                  nodestack.append(currentNode)
+                  stack.append('node')
                   currentnode = newNode
-                  continue
                 elif interfacematch != None:
                   newNode = Name(interfacematch.group(0).strip(), filename, linecount, 'InterfaceName', None, currentNode)
                   currentNode.addName(newNode)
-                  nodestack.append(currentNode)
+                  stack.append('node')
                   currentnode = newNode
-                  continue
                 elif enummatch != None:
                   newNode = Name(enummatch.group(0).strip(), filename, linecount, 'EnumName', None, currentNode)
                   currentNode.addName(newNode)
-                  nodestack.append(currentNode)
+                  stack.append('node')
                   currentnode = newNode
-                  continue
                 elif methodmatch != None:
                   newNode = Name(methodmatch.group(0).strip(), filename, linecount, 'MethodName', None, currentNode)
                   currentNode.addName(newNode)
-                  nodestack.append(currentNode)
+                  stack.append('node')
                   currentnode = newNode
-                  continue
                 elif varmatch != None:
                   newNode = Name(varmatch.group(0).strip(), filename, linecount, 'VariableName', None, currentNode)
                   currentNode.addName(newNode)
-                  continue
                 elif constantmatch != None:
                   newNode = Name(varmatch.group(0).strip(), filename, linecount, 'ConstantName', None, currentNode)
                   currentNode.addName(newNode)
-                  continue
                 if openbracketmatch != None:
-                  bracketstack.append('{')
+                  stack.append('{')
                 if closebracketmatch != None:
-                  bracketstack.pop()
-                  if bracketstack.count == 0:
-                    currentnode = nodestack.pop()
+                  stack.pop()
+                  if len(stack) == 0:
+                      currentNode = topNode
+                  elif stack[len(stack)-1] != '{':
+                    currentNode = currentNode.parent
+                    if currentNode == None:
+                        currentNode = topNode
+                    stack.pop()
                 linecount += 1
-    
     with open(outputfile, 'w') as outfile:
-        json.dump(data, outfile)
+        outfile.write(jsonpickle.encode(data))
 
 if __name__ == "__main__":
    main(sys.argv[1:])
