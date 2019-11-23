@@ -57,8 +57,8 @@ def main(argv):
                 methodmatch = re.search('[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=\(([a-zA-Z]+[a-zA-Z0-9$_]*((\[\])|(<[a-zA-Z]+[a-zA-Z0-9$_]*>))?)+ ([a-zA-Z]+[a-zA-Z0-9$_]*)+( *(,|\))))', line)
                 varmatch = re.findall('([a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)?( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;)))', line)
                 constantmatch = re.findall('static( +)([a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)?( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;)))', line)
-                openbracketmatch = re.search('{', line)
-                closebracketmatch = re.search('}', line)
+                openbracketmatch = re.findall('{', line)
+                closebracketmatch = re.findall('}', line)
                 if classmatch != None:
                   newNode = Name(classmatch.group(0).strip(), filename, linecount, 'ClassName', None, currentNode)
                   currentNode.addName(newNode)
@@ -94,17 +94,19 @@ def main(argv):
                     if (vartype != 'return'):
                       newNode = Name(name, filename, linecount, nameType, vartype, currentNode)
                       currentNode.addName(newNode)
-                if openbracketmatch != None:
-                  stack.append('{')
-                if closebracketmatch != None:
-                  stack.pop()
-                  if len(stack) == 0:
-                      currentNode = topNode
-                  elif stack[len(stack)-1] != '{':
-                    currentNode = currentNode.parent
-                    if currentNode == None:
-                        currentNode = topNode
+                if openbracketmatch != []:
+                  for obracket in openbracketmatch:
+                    stack.append('{')
+                if closebracketmatch != []:
+                  for cbracket in closebracketmatch:
                     stack.pop()
+                    if len(stack) == 0:
+                        currentNode = topNode
+                    elif stack[len(stack)-1] != '{':
+                      currentNode = currentNode.parent
+                      if currentNode == None:
+                          currentNode = topNode
+                      stack.pop()
                 linecount += 1
     with open(outputfile, 'w') as outfile:
         outfile.write(jsonpickle.encode(data))
