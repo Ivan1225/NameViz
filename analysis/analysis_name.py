@@ -25,7 +25,6 @@ def check_outlier(name, name_type):
             d['isOutlier'] = True
             d['errorMessage'] = e.value
     finally:
-            print(d)
             return d
 
 
