@@ -6,13 +6,14 @@ import re
 from analysis_name import check_outlier
 
 class Name:
-    def __init__(self, name, filename, line, nametype, vartype, parent):
+    def __init__(self, name, filename, filepath, line, nametype, vartype, parent):
         self.name = name
-        self.filename = filename
-        self.line = line
-        self.nametype = nametype
-        self.vartype = vartype
-        self.subnames = []
+        self.fileName = filename
+        self.filePath = filepath
+        self.lineNumber = line
+        self.type = nametype
+        self.variableType = vartype
+        self.subNames = []
         self.parent = parent
         if name and nametype:
           self.isOutlier = False
@@ -22,7 +23,7 @@ class Name:
           self.isOutlier = extra_fields["isOutlier"]
           self.errorMessage = extra_fields["errorMessage"]
     def addName(self, name):
-        self.subnames.append(name)
+        self.subNames.append(name)
 
 def main(argv):
 
@@ -53,7 +54,7 @@ def main(argv):
       for filename in files:
         fname = os.path.join(dirpath,filename)
         if fname.endswith('.java'):
-          topNode = Name(None, filename, None, None, None, None)
+          topNode = Name(None, filename, fname, None, None, None, None)
           currentNode = topNode
           data.append(currentNode)
           linecount = 0
@@ -69,17 +70,17 @@ def main(argv):
                 openbracketmatch = re.findall('{', line)
                 closebracketmatch = re.findall('}', line)
                 if classmatch != None:
-                  newNode = Name(classmatch.group(0).strip(), filename, linecount, 'ClassName', None, currentNode)
+                  newNode = Name(classmatch.group(0).strip(), filename, fname, linecount, 'ClassName', None, currentNode)
                   currentNode.addName(newNode)
                   stack.append('node')
                   currentNode = newNode
                 elif interfacematch != None:
-                  newNode = Name(interfacematch.group(0).strip(), filename, linecount, 'InterfaceName', None, currentNode)
+                  newNode = Name(interfacematch.group(0).strip(), filename, fname, linecount, 'InterfaceName', None, currentNode)
                   currentNode.addName(newNode)
                   stack.append('node')
                   currentNode = newNode
                 elif enummatch != None:
-                  newNode = Name(enummatch.group(0).strip(), filename, linecount, 'EnumName', None, currentNode)
+                  newNode = Name(enummatch.group(0).strip(), filename, fname, linecount, 'EnumName', None, currentNode)
                   currentNode.addName(newNode)
                   stack.append('node')
                   currentNode = newNode
@@ -87,7 +88,7 @@ def main(argv):
                   methodNameWithType = methodmatch.group(0).strip()
                   methodNameWithTypeArr = methodNameWithType.split(' ')
                   methodName = methodNameWithTypeArr[len(methodNameWithTypeArr)-1]
-                  newNode = Name(methodName, filename, linecount, 'MethodName', None, currentNode)
+                  newNode = Name(methodName, filename, fname, linecount, 'MethodName', None, currentNode)
                   currentNode.addName(newNode)
                   stack.append('node')
                   currentnode = newNode
@@ -104,7 +105,7 @@ def main(argv):
                           nameType = 'ConstantName'
                           break
                     if (vartype != 'return'):
-                      newNode = Name(name, filename, linecount, nameType, vartype, currentNode)
+                      newNode = Name(name, filename, fname, linecount, nameType, vartype, currentNode)
                       currentNode.addName(newNode)
                 if openbracketmatch != []:
                   for obracket in openbracketmatch:
