@@ -71,6 +71,8 @@ def main(argv):
               constantmatch = re.findall('final( +)([a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)?( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;)))', line)
               openbracketmatch = re.findall('{', line)
               closebracketmatch = re.findall('}', line)
+              if line.strip().startswith('//'):
+                  continue
               if classmatch != None:
                 newNode = Name(getClassLevelName(classmatch), filename, fname, linecount, calculatePos(classmatch), 'ClassName', None, currentNode)
                 currentNode.addName(newNode)
