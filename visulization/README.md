@@ -7,6 +7,8 @@ Currently, we have two tabs to help the user:
 * Network graph tab: In this tab, there are two graphs, one is a node-link graph and the pie chart. Which corresponded to filter used defined in the left of the tab. This tab allows the user to find out some general information about the whole project and for each file.
 * Position graph tab: In this tab, there is one position graph, which shows the position of each name in a single file, it helps user quickly find out the position of outliers.
 
+![Visulization Demo](./resources/demo.gif)
+
 # Setup
 
 Requirement:
@@ -28,6 +30,9 @@ bokeh serve --show app
 
 ### Network graph tab
 
+![network graph](./resources/network.png)
+
 ### Position graph tab
 
+![position graph](./resources/position.png)
 
