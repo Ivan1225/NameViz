@@ -5,35 +5,26 @@ from math import pi
 
 import pandas as pd
 
-from bokeh.models import Panel, Plot, Range1d, MultiLine, Circle, PanTool, HoverTool, BoxZoomTool, ResetTool, WheelZoomTool, ColumnDataSource
+from bokeh.models import Panel, Plot, Range1d, MultiLine, Circle, PanTool, HoverTool, ResetTool, WheelZoomTool, ColumnDataSource
 from bokeh.models.graphs import from_networkx
 from bokeh.models.widgets import CheckboxGroup, Select
-from bokeh.layouts import layout, row, column
+from bokeh.layouts import layout, column
 from bokeh.plotting import figure
-from bokeh.palettes import Category20c, Colorblind
+from bokeh.palettes import Set1
 from bokeh.transform import cumsum
 
 
 # constant
-BASIC_TYPE = ["class", "method", "variable", "constant"]
-DETAILED_TYPE = ["class_normal", "class_outlier", "method_normal", "method_outlier", "variable_normal", "variable_outlier", "constant_normal", "constant_outlier"]
+BASIC_TYPE = ['ClassName', 'InterfaceName', 'EnumName', 'MethodName', 'VariableName', 'ConstantName']
 
-BASIC_TYPE_COLORS = {
-    "class": "#155263",
-    "method": "#ff6f3c",
-    "variable": "#ff9a3c",
-    "constant": "#ffc93c"
-}
-DETAILED_TYPE_COLORS = {
-    "class_normal": "#2289A8",
-    "class_outlier": "#155263",
-    "method_normal": "#ff6f3c",
-    "method_outlier": "#ff5212",
-    "variable_normal": "#ff9a3c",
-    "variable_outlier": "#ff8204",
-    "constant_normal": "#ffc93c",
-    "constant_outlier": "#ffc00e"
-}
+BASIC_TYPE_COLORS = {}
+COLORS = Set1[len(BASIC_TYPE)+1]
+
+for i in range(len(BASIC_TYPE)):
+    BASIC_TYPE_COLORS[BASIC_TYPE[i]] = COLORS[i+1]
+
+BASIC_TYPE_COLORS["Outlier"] = COLORS[0]
+
 
 NORMAL_EDGE_COLOR, OUTLIER_EDGE_COLOR = "black", "red"
 
@@ -49,8 +40,11 @@ def add_name(G, D, e, selected_type):
         return None
 
     name = e["name"]
+    if name is None : 
+        return None
+
     file_path = e["filePath"]
-    line_number = e["lineNumber"]
+    line_number = e["line"]
 
     is_outlier = e["isOutlier"]
     
@@ -58,8 +52,8 @@ def add_name(G, D, e, selected_type):
     error_message = e["errorMessage"]
     
     node_name = name + "_" + file_path + "_" + str(line_number)
-    type_identifier = name_type + "_outlier" if is_outlier else name_type+ "_normal"
-    node_color = DETAILED_TYPE_COLORS[type_identifier]
+    type_identifier = "Outlier" if is_outlier else name_type
+    node_color = BASIC_TYPE_COLORS[type_identifier]
     D[type_identifier] += 1
 
     G.add_node(node_name, val=name, file_path=file_path, line_number=line_number, 
@@ -81,8 +75,8 @@ def generate_source(original_data, selected_type, selected_file):
     network_data = nx.Graph()
     pi_graph_data_o = {}
     for e in selected_type:
-        pi_graph_data_o[str(e)+"_normal"] = 0
-        pi_graph_data_o[str(e)+"_outlier"] = 0
+        pi_graph_data_o[str(e)] = 0
+    pi_graph_data_o["Outlier"] = 0
 
     for name in original_data:
         file_path = name["filePath"]
@@ -96,7 +90,7 @@ def generate_source(original_data, selected_type, selected_file):
 
     pi_graph_data_i = pd.Series(pi_graph_data_o).reset_index(name='value').rename(columns={'index':'type'})
     pi_graph_data_i['angle'] = pi_graph_data_i['value']/pi_graph_data_i['value'].sum() * 2*pi
-    pi_graph_data_i['color'] = [DETAILED_TYPE_COLORS[e] for e in pi_graph_data_o.keys()]
+    pi_graph_data_i['color'] = [BASIC_TYPE_COLORS[e] for e in pi_graph_data_o.keys()]
 
     pi_graph_data = ColumnDataSource(pi_graph_data_i)
 
@@ -104,7 +98,7 @@ def generate_source(original_data, selected_type, selected_file):
 
 
 def generate_plot(network_data, pi_graph_data):
-    pi_plot = figure(plot_height=400, title="Pie Chart", toolbar_location=None,
+    pi_plot = figure(plot_height=400, title="Ditribution Chart", toolbar_location=None,
            tools="hover", tooltips="@type: @value", x_range=(-0.5, 1.0))
 
     pi_plot.wedge(x=0, y=1, radius=0.4,
@@ -121,11 +115,11 @@ def generate_plot(network_data, pi_graph_data):
 
     node_hover_tool = HoverTool(tooltips=[("name", "@val"), ("type", "@name_type"),("outlier", "@is_outlier"),
                                             ("filePaht","@file_path"), ("lineNumber", "@line_number"),("hint", "@error_message")])
-    network_plot.add_tools(node_hover_tool, PanTool(), BoxZoomTool(), WheelZoomTool(), ResetTool())
+    network_plot.add_tools(node_hover_tool, PanTool(), WheelZoomTool(), ResetTool())
 
     graph_renderer = from_networkx(network_data, nx.spring_layout, scale=1, center=(0, 0))
 
-    graph_renderer.node_renderer.glyph = Circle(size=30, fill_color="color")
+    graph_renderer.node_renderer.glyph = Circle(size=18, fill_color="color")
     graph_renderer.edge_renderer.glyph = MultiLine(line_color="edge_color", line_alpha=0.8, line_width=1)
     network_plot.renderers.append(graph_renderer)
 
