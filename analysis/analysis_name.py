@@ -23,7 +23,7 @@ def check_outlier(name, name_type):
                 raise Exception("Please specify the name type for the name")
     except Exception as e:
             d['isOutlier'] = True
-            d['errorMessage'] = e
+            d['errorMessage'] = e.value
     finally:
             print(d)
             return d
