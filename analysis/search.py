@@ -3,6 +3,7 @@ import jsonpickle
 import os
 import getopt, sys
 import re
+from analysis_name import check_outlier
 
 class Name:
     def __init__(self, name, filename, line, nametype, vartype, parent):
@@ -13,6 +14,13 @@ class Name:
         self.vartype = vartype
         self.subnames = []
         self.parent = parent
+        if name and nametype:
+          self.isOutlier = False
+          self.errorMessage = ''
+        else:
+          extra_fields = check_outlier(name, nametype)
+          self.isOutlier = extra_fields["isOutlier"]
+          self.errorMessage = extra_fields["errorMessage"]
     def addName(self, name):
         self.subnames.append(name)
 
