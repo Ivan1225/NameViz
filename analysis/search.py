@@ -10,7 +10,7 @@ class Name:
         self.name = name
         self.fileName = filename
         self.filePath = filepath
-        self.lineNumber = line
+        self.line = line
         self.type = nametype
         self.variableType = vartype
         self.subNames = []
@@ -66,7 +66,7 @@ def main(argv):
                 enummatch = re.search('(?<=enum)(\s)+[^\s]+', line)
                 methodmatch = re.search('[a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)? +[a-zA-Z]+[a-zA-Z0-9$_]* *(?=\()', line)
                 varmatch = re.findall('([a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)?( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;)))', line)
-                constantmatch = re.findall('static( +)([a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)?( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;)))', line)
+                constantmatch = re.findall('final( +)([a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)?( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;)))', line)
                 openbracketmatch = re.findall('{', line)
                 closebracketmatch = re.findall('}', line)
                 if classmatch != None:
@@ -91,7 +91,7 @@ def main(argv):
                   newNode = Name(methodName, filename, fname, linecount, 'MethodName', None, currentNode)
                   currentNode.addName(newNode)
                   stack.append('node')
-                  currentnode = newNode
+                  currentNode = newNode
                 elif varmatch != []:
                   for match in varmatch:
                     nameWithType = match[0].strip()
