@@ -50,11 +50,12 @@ def main(argv):
           data.append(currentNode)
           linecount = 0
           with open(fname) as myfile:
+            print('parsing: ' + filename + '...')
             for line in myfile:
                 classmatch = re.search('(?<=class)(\s)+[^\s]+', line)
                 interfacematch = re.search('(?<=interface)(\s)+[^\s]+', line)
                 enummatch = re.search('(?<=enum)(\s)+[^\s]+', line)
-                methodmatch = re.search('[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=\(([a-zA-Z]+[a-zA-Z0-9$_]*((\[\])|(<[a-zA-Z]+[a-zA-Z0-9$_]*>))?)+ ([a-zA-Z]+[a-zA-Z0-9$_]*)+( *(,|\))))', line)
+                methodmatch = re.search('[a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)? +[a-zA-Z]+[a-zA-Z0-9$_]* *(?=\()', line)
                 varmatch = re.findall('([a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)?( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;)))', line)
                 constantmatch = re.findall('static( +)([a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)?( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;)))', line)
                 openbracketmatch = re.findall('{', line)
@@ -75,7 +76,10 @@ def main(argv):
                   stack.append('node')
                   currentNode = newNode
                 elif methodmatch != None:
-                  newNode = Name(methodmatch.group(0).strip(), filename, linecount, 'MethodName', None, currentNode)
+                  methodNameWithType = methodmatch.group(0).strip()
+                  methodNameWithTypeArr = methodNameWithType.split(' ')
+                  methodName = methodNameWithTypeArr[len(methodNameWithTypeArr)-1]
+                  newNode = Name(methodName, filename, linecount, 'MethodName', None, currentNode)
                   currentNode.addName(newNode)
                   stack.append('node')
                   currentnode = newNode
@@ -105,9 +109,11 @@ def main(argv):
                     elif stack[len(stack)-1] != '{':
                       currentNode = currentNode.parent
                       if currentNode == None:
-                          currentNode = topNode
+                        currentNode = topNode
                       stack.pop()
                 linecount += 1
+            print('parsing: ' + filename +' complete!')
+            print('----------------------')
     with open(outputfile, 'w') as outfile:
         outfile.write(jsonpickle.encode(data))
 
