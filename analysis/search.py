@@ -64,15 +64,19 @@ def main(argv):
             print('parsing: ' + filename + '...')
             for line in myfile:
               linecount += 1
-              if '/*' in line:
-                  line = line.split('/*')[1]
-                  commented = True
               if commented:
                   if '*/' in line:
-                      line = line.split('/*')[0]
+                      line = line.split('*/')[1]
                       commented = False
                   else:
                     continue
+              if '/*' in line:
+                  line = line.split('/*')[0]
+                  commented = True
+                  if '*/' in line:
+                      line = line.split('*/')[1]
+                      commented = False
+              
               classmatch = re.search('(?<=class)(\s)+[^\s]+', line)
               interfacematch = re.search('(?<=interface)(\s)+[^\s]+', line)
               enummatch = re.search('(?<=enum)(\s)+[^\s]+', line)
