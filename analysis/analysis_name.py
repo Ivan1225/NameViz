@@ -124,7 +124,7 @@ def check_sysnsets(name):
 
 
 def camel_case_split(str):
-    return re.findall(r'[A-Z](?:[a-z]+|[A-Z]*(?=[A-Z]|$))', str)
+    return re.split(r'(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])', str)
 
 
 def check_start_with_special_char(str):
