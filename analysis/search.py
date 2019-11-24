@@ -16,7 +16,7 @@ class Name:
         self.variableType = vartype
         self.subNames = []
         self.parent = parent
-        if name and nametype:
+        if not (name and nametype):
           self.isOutlier = False
           self.errorMessage = ''
         else:
