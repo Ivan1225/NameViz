@@ -62,66 +62,67 @@ def main(argv):
           with open(fname) as myfile:
             print('parsing: ' + filename + '...')
             for line in myfile:
-                classmatch = re.search('(?<=class)(\s)+[^\s]+', line)
-                interfacematch = re.search('(?<=interface)(\s)+[^\s]+', line)
-                enummatch = re.search('(?<=enum)(\s)+[^\s]+', line)
-                methodmatch = re.search('[a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)? +[a-zA-Z]+[a-zA-Z0-9$_]* *(?=\()', line)
-                varmatch = re.finditer('([a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)?( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;)))', line)
-                constantmatch = re.findall('final( +)([a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)?( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;)))', line)
-                openbracketmatch = re.findall('{', line)
-                closebracketmatch = re.findall('}', line)
-                if classmatch != None:
-                  newNode = Name(classmatch.group(0).strip(), filename, fname, linecount, calculatePos(classmatch), 'ClassName', None, currentNode)
-                  currentNode.addName(newNode)
-                  stack.append('node')
-                  currentNode = newNode
-                elif interfacematch != None:
-                  newNode = Name(interfacematch.group(0).strip(), filename, fname, linecount, calculatePos(interfacematch), 'InterfaceName', None, currentNode)
-                  currentNode.addName(newNode)
-                  stack.append('node')
-                  currentNode = newNode
-                elif enummatch != None:
-                  newNode = Name(enummatch.group(0).strip(), filename, fname, linecount, calculatePos(enummatch), 'EnumName', None, currentNode)
-                  currentNode.addName(newNode)
-                  stack.append('node')
-                  currentNode = newNode
-                elif methodmatch != None:
-                  methodNameWithType = methodmatch.group(0).strip()
-                  methodNameWithTypeArr = methodNameWithType.split(' ')
-                  methodName = methodNameWithTypeArr[len(methodNameWithTypeArr)-1]
-                  newNode = Name(methodName, filename, fname, linecount, calculatePos(methodmatch), 'MethodName', None, currentNode)
-                  currentNode.addName(newNode)
-                  stack.append('node')
-                  currentNode = newNode
-                elif varmatch != []:
-                  for match in varmatch:
-                    nameWithType = match.group(0).strip()
-                    nameTypeArr = nameWithType.split(' ')
-                    name = nameTypeArr[len(nameTypeArr) - 1]
-                    vartype = nameTypeArr[0]
-                    nameType = 'VariableName'
-                    if (vartype != 'return'):
-                      if constantmatch != []:
-                        for cons in constantmatch:
-                          if (match[0] in cons):
-                            nameType = 'ConstantName'
-                            break
-                      newNode = Name(name, filename, fname, linecount, calculatePos(match), nameType, vartype, currentNode)
-                      currentNode.addName(newNode)
-                if openbracketmatch != []:
-                  for obracket in openbracketmatch:
-                    stack.append('{')
-                if closebracketmatch != []:
-                  for cbracket in closebracketmatch:
+              linecount += 1
+              classmatch = re.search('(?<=class)(\s)+[^\s]+', line)
+              interfacematch = re.search('(?<=interface)(\s)+[^\s]+', line)
+              enummatch = re.search('(?<=enum)(\s)+[^\s]+', line)
+              methodmatch = re.search('[a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)? +[a-zA-Z]+[a-zA-Z0-9$_]* *(?=\()', line)
+              varmatch = re.finditer('([a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)?( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;)))', line)
+              constantmatch = re.findall('final( +)([a-zA-Z]+[a-zA-Z0-9$_]*(\[\]|<[a-zA-Z]+[a-zA-Z0-9$_]*>)?( +)[a-zA-Z]+[a-zA-Z0-9$_]*( *)(?=(=|;)))', line)
+              openbracketmatch = re.findall('{', line)
+              closebracketmatch = re.findall('}', line)
+              if classmatch != None:
+                newNode = Name(getClassLevelName(classmatch), filename, fname, linecount, calculatePos(classmatch), 'ClassName', None, currentNode)
+                currentNode.addName(newNode)
+                stack.append('node')
+                currentNode = newNode
+              elif interfacematch != None:
+                newNode = Name(getClassLevelName(interfacematch), filename, fname, linecount, calculatePos(interfacematch), 'InterfaceName', None, currentNode)
+                currentNode.addName(newNode)
+                stack.append('node')
+                currentNode = newNode
+              elif enummatch != None:
+                newNode = Name(getClassLevelName(enummatch), filename, fname, linecount, calculatePos(enummatch), 'EnumName', None, currentNode)
+                currentNode.addName(newNode)
+                stack.append('node')
+                currentNode = newNode
+              elif methodmatch != None:
+                methodNameWithType = methodmatch.group(0).strip()
+                methodNameWithTypeArr = methodNameWithType.split(' ')
+                methodName = methodNameWithTypeArr[len(methodNameWithTypeArr)-1]
+                newNode = Name(methodName, filename, fname, linecount, calculatePos(methodmatch), 'MethodName', None, currentNode)
+                currentNode.addName(newNode)
+                stack.append('node')
+                currentNode = newNode
+              elif varmatch != []:
+                for match in varmatch:
+                  nameWithType = match.group(0).strip()
+                  nameTypeArr = nameWithType.split(' ')
+                  name = nameTypeArr[len(nameTypeArr) - 1]
+                  vartype = nameTypeArr[0]
+                  nameType = 'VariableName'
+                  if (vartype != 'return'):
+                    if constantmatch != []:
+                      for cons in constantmatch:
+                        if (match[0] in cons):
+                          nameType = 'ConstantName'
+                          break
+                    newNode = Name(name, filename, fname, linecount, calculatePos(match), nameType, vartype, currentNode)
+                    currentNode.addName(newNode)
+              if openbracketmatch != []:
+                for obracket in openbracketmatch:
+                  stack.append('{')
+              if closebracketmatch != []:
+                for cbracket in closebracketmatch:
+                  stack.pop()
+                  if len(stack) == 0:
+                      currentNode = topNode
+                  elif stack[len(stack)-1] != '{':
+                    currentNode = currentNode.parent
+                    if currentNode == None:
+                      currentNode = topNode
                     stack.pop()
-                    if len(stack) == 0:
-                        currentNode = topNode
-                    elif stack[len(stack)-1] != '{':
-                      currentNode = currentNode.parent
-                      if currentNode == None:
-                        currentNode = topNode
-                      stack.pop()
-                linecount += 1
+                
             print('parsing: ' + filename +' complete!')
             print('----------------------')
     with open(outputfile, 'w') as outfile:
@@ -138,6 +139,9 @@ def calculatePos(match):
       pos += len(matchArr[i])
     i += 1
   return pos
+
+def getClassLevelName(match):
+  return match.group(0).strip()
         
 if __name__ == "__main__":
    main(sys.argv[1:])
