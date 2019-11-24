@@ -15,10 +15,10 @@ class Name:
         self.subnames = []
         self.parent = parent
         if name and nametype:
-          self.isOutlier = false
+          self.isOutlier = False
           self.errorMessage = ''
         else:
-          extra_fields = check_outlier(name, nameType)
+          extra_fields = check_outlier(name, nametype)
           self.isOutlier = extra_fields["isOutlier"]
           self.errorMessage = extra_fields["errorMessage"]
     def addName(self, name):
