@@ -7,17 +7,17 @@ def check_outlier(name, name_type):
     d['isOutlier'] = False
     d['errorMessage']=""
     try:
-            if name_type == 'class':
+            if name_type == 'ClassName':
                 class_name_helper(name)
-            elif name_type == 'enum':
+            elif name_type == 'EnumName':
                 enum_name_helper(name)
-            elif name_type == 'interface':
+            elif name_type == 'InterfaceName':
                 interface_name_helper(name)
-            elif name_type == 'method':
+            elif name_type == 'MethodName':
                 method_name_helper(name)
-            elif name_type == 'variable':
+            elif name_type == 'VariableName':
                 variable_name_helper(name)
-            elif name_type == 'constant':
+            elif name_type == 'ConstantName':
                 constant_name_helper(name)
             else:
                 raise Exception("Please specify the name type for the name")
