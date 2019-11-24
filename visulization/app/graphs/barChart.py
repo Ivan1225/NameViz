@@ -8,6 +8,14 @@ from bokeh.plotting import figure
 from bokeh.models import Panel
 
 
+BASIC_TYPE = ['ClassName', 'InterfaceName', 'EnumName', 'MethodName', 'VariableName', 'ConstantName']
+
+BASIC_TYPE_COLORS = {}
+COLORS = Set1[len(BASIC_TYPE)+1]
+
+for i in range(len(BASIC_TYPE)):
+    BASIC_TYPE_COLORS[BASIC_TYPE[i]] = COLORS[i+1]
+
 def barChart_tab(data):
     # with open('Test Data/package.json') as f:
     #     testData = json.load(f)
