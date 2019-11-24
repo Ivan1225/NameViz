@@ -7,24 +7,26 @@ def check_outlier(name, name_type):
     d['isOutlier'] = False
     d['errorMessage']=""
     try:
-          if name_type == 'class':
-            class_name_helper(name)
-          elif name_type == 'interface':
-            interface_name_helper(name)
-          elif name_type == 'method':
-            method_name_helper(name)
-          elif name_type == 'variable':
-            variable_name_helper(name)
-          elif name_type == 'constant':
-            constant_name_helper(name)
-          else:
-            raise Exception("Please specify the name type for the name")
+            if name_type == 'class':
+                class_name_helper(name)
+            elif name_type == 'enum':
+                enum_name_helper(name)
+            elif name_type == 'interface':
+                interface_name_helper(name)
+            elif name_type == 'method':
+                method_name_helper(name)
+            elif name_type == 'variable':
+                variable_name_helper(name)
+            elif name_type == 'constant':
+                constant_name_helper(name)
+            else:
+                raise Exception("Please specify the name type for the name")
     except Exception as e:
-          d['isOutlier'] = True
-          d['errorMessage'] = e
+            d['isOutlier'] = True
+            d['errorMessage'] = e
     finally:
-          print(d)
-          return d
+            print(d)
+            return d
 
 
 def class_name_helper(name):
@@ -40,6 +42,20 @@ def class_name_helper(name):
             raise Exception('Class name should be a noun')
     else:
         raise Exception('Class name should start with the uppercase letter')
+
+def enum_name_helper(name):
+    if name[0].isupper():
+        last_word = camel_case_split(name)[-1]
+        synsets = check_sysnsets(last_word)
+        for word in camel_case_split(name):
+            if not bool(check_sysnsets(word)):
+                raise Exception('Unknown word: '+word+', or you should use camel case for enum name')
+        if 'n' in synsets:
+            return True
+        else:
+            raise Exception('Enum name should be a noun')
+    else:
+        raise Exception('Enum name should start with the uppercase letter')
 
 
 def interface_name_helper(name):
@@ -113,6 +129,3 @@ def camel_case_split(str):
 
 def check_start_with_special_char(str):
     return re.match(r'^[a-zA-Z0-9](.*)?$', str)
-
-
-check_outlier("You", "class")
