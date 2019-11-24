@@ -89,11 +89,13 @@ def main(argv):
               elif methodmatch != None:
                 methodNameWithType = methodmatch.group(0).strip()
                 methodNameWithTypeArr = methodNameWithType.split(' ')
-                methodName = methodNameWithTypeArr[len(methodNameWithTypeArr)-1]
-                newNode = Name(methodName, filename, fname, linecount, calculatePos(methodmatch), 'MethodName', None, currentNode)
-                currentNode.addName(newNode)
-                stack.append('node')
-                currentNode = newNode
+                methodType = methodNameWithTypeArr[0]
+                if methodType not in ['new', 'else', 'throw']:
+                  methodName = methodNameWithTypeArr[len(methodNameWithTypeArr)-1]
+                  newNode = Name(methodName, filename, fname, linecount, calculatePos(methodmatch), 'MethodName', None, currentNode)
+                  currentNode.addName(newNode)
+                  stack.append('node')
+                  currentNode = newNode
               elif varmatch != []:
                 for match in varmatch:
                   nameWithType = match.group(0).strip()
