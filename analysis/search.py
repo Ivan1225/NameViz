@@ -59,10 +59,20 @@ def main(argv):
           currentNode = topNode
           data.append(currentNode)
           linecount = 0
+          commented = False
           with open(fname) as myfile:
             print('parsing: ' + filename + '...')
             for line in myfile:
               linecount += 1
+              if '/*' in line:
+                  line = line.split('/*')[1]
+                  commented = True
+              if commented:
+                  if '*/' in line:
+                      line = line.split('/*')[0]
+                      commented = False
+                  else:
+                    continue
               classmatch = re.search('(?<=class)(\s)+[^\s]+', line)
               interfacematch = re.search('(?<=interface)(\s)+[^\s]+', line)
               enummatch = re.search('(?<=enum)(\s)+[^\s]+', line)
