@@ -92,6 +92,7 @@ def method_name_helper(name):
 
 def variable_name_helper(name):
     if not name[0].isupper():
+      words = camel_case_split(name)
       if len(name) == 1:
         raise Exception('Avoid using one-character variables name')
       if not check_start_with_special_char(name):
