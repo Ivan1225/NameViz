@@ -84,7 +84,7 @@ David: Write regex and algorithm that search different kinds of names from java 
 * Jude Sidloski
 * Ivan Zhang
   * Research resource of accuracy of WordNet words bank.
-  * Analysis name with name type to check if it is outlier.
+  * Using regex and WordNet to analysis each word in a name to check if the word match correct pattern of Java naming convention.
   * Test with different name and name type combinations.
   * Combine outlier result to output.
 
@@ -92,4 +92,7 @@ David: Write regex and algorithm that search different kinds of names from java 
 
 * Estella Wang
 * Frank Yan
+  * build outer frame for visualization
+  * mainly worked on implementation of node graph, pie chart and scatter plot.
+  * add simple filiter allow users to foucus on part of project thery want to do visualization.
 
