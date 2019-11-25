@@ -1,0 +1,197 @@
+[
+    {
+        "errorMessage": "",
+        "fileName": "Type.java",
+        "filePath": "/Users/davidchen/Code/test/Type.java",
+        "isOutlier": true,
+        "line": null,
+        "name": null,
+        "parent": null,
+        "py/object": "__main__.Name",
+        "subNames": [
+            {
+                "errorMessage": "",
+                "fileName": "Type.java",
+                "filePath": "/Users/davidchen/Code/test/Type.java",
+                "isOutlier": false,
+                "line": 11,
+                "name": "GetType",
+                "parent": {
+                    "py/id": 1
+                },
+                "py/object": "__main__.Name",
+                "subNames": [
+                    {
+                        "errorMessage": "",
+                        "fileName": "Type.java",
+                        "filePath": "/Users/davidchen/Code/test/Type.java",
+                        "isOutlier": false,
+                        "line": 13,
+                        "name": "id",
+                        "parent": {
+                            "py/id": 3
+                        },
+                        "py/object": "__main__.Name",
+                        "subNames": [],
+                        "type": "VariableName",
+                        "variableType": "Long"
+                    },
+                    {
+                        "errorMessage": "",
+                        "fileName": "Type.java",
+                        "filePath": "/Users/davidchen/Code/test/Type.java",
+                        "isOutlier": false,
+                        "line": 13,
+                        "name": "name",
+                        "parent": {
+                            "py/id": 3
+                        },
+                        "py/object": "__main__.Name",
+                        "subNames": [],
+                        "type": "ConstantName",
+                        "variableType": "String"
+                    },
+                    {
+                        "errorMessage": "",
+                        "fileName": "Type.java",
+                        "filePath": "/Users/davidchen/Code/test/Type.java",
+                        "isOutlier": false,
+                        "line": 17,
+                        "name": "blogs",
+                        "parent": {
+                            "py/id": 3
+                        },
+                        "py/object": "__main__.Name",
+                        "subNames": [],
+                        "type": "VariableName",
+                        "variableType": "List<Blog>"
+                    },
+                    {
+                        "errorMessage": "",
+                        "fileName": "Type.java",
+                        "filePath": "/Users/davidchen/Code/test/Type.java",
+                        "isOutlier": false,
+                        "line": 19,
+                        "name": "Type",
+                        "parent": {
+                            "py/id": 3
+                        },
+                        "py/object": "__main__.Name",
+                        "subNames": [],
+                        "type": "MethodName",
+                        "variableType": null
+                    },
+                    {
+                        "errorMessage": "",
+                        "fileName": "Type.java",
+                        "filePath": "/Users/davidchen/Code/test/Type.java",
+                        "isOutlier": false,
+                        "line": 22,
+                        "name": "Id",
+                        "parent": {
+                            "py/id": 3
+                        },
+                        "py/object": "__main__.Name",
+                        "subNames": [],
+                        "type": "MethodName",
+                        "variableType": null
+                    },
+                    {
+                        "errorMessage": "",
+                        "fileName": "Type.java",
+                        "filePath": "/Users/davidchen/Code/test/Type.java",
+                        "isOutlier": false,
+                        "line": 26,
+                        "name": "setId",
+                        "parent": {
+                            "py/id": 3
+                        },
+                        "py/object": "__main__.Name",
+                        "subNames": [],
+                        "type": "MethodName",
+                        "variableType": null
+                    },
+                    {
+                        "errorMessage": "",
+                        "fileName": "Type.java",
+                        "filePath": "/Users/davidchen/Code/test/Type.java",
+                        "isOutlier": false,
+                        "line": 30,
+                        "name": "getName",
+                        "parent": {
+                            "py/id": 3
+                        },
+                        "py/object": "__main__.Name",
+                        "subNames": [],
+                        "type": "MethodName",
+                        "variableType": null
+                    },
+                    {
+                        "errorMessage": "",
+                        "fileName": "Type.java",
+                        "filePath": "/Users/davidchen/Code/test/Type.java",
+                        "isOutlier": false,
+                        "line": 34,
+                        "name": "setName",
+                        "parent": {
+                            "py/id": 3
+                        },
+                        "py/object": "__main__.Name",
+                        "subNames": [],
+                        "type": "MethodName",
+                        "variableType": null
+                    },
+                    {
+                        "errorMessage": "",
+                        "fileName": "Type.java",
+                        "filePath": "/Users/davidchen/Code/test/Type.java",
+                        "isOutlier": false,
+                        "line": 38,
+                        "name": "getBlogs",
+                        "parent": {
+                            "py/id": 3
+                        },
+                        "py/object": "__main__.Name",
+                        "subNames": [],
+                        "type": "MethodName",
+                        "variableType": null
+                    },
+                    {
+                        "errorMessage": "",
+                        "fileName": "Type.java",
+                        "filePath": "/Users/davidchen/Code/test/Type.java",
+                        "isOutlier": false,
+                        "line": 42,
+                        "name": "setBlogs",
+                        "parent": {
+                            "py/id": 3
+                        },
+                        "py/object": "__main__.Name",
+                        "subNames": [],
+                        "type": "MethodName",
+                        "variableType": null
+                    },
+                    {
+                        "errorMessage": "",
+                        "fileName": "Type.java",
+                        "filePath": "/Users/davidchen/Code/test/Type.java",
+                        "isOutlier": false,
+                        "line": 47,
+                        "name": "toString",
+                        "parent": {
+                            "py/id": 3
+                        },
+                        "py/object": "__main__.Name",
+                        "subNames": [],
+                        "type": "MethodName",
+                        "variableType": null
+                    }
+                ],
+                "type": "ClassName",
+                "variableType": null
+            }
+        ],
+        "type": null,
+        "variableType": null
+    }
+]
