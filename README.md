@@ -76,12 +76,15 @@ we provide a smiple script to run our tool, which would do analysis first and th
 ## Work
 
 This part shows each member response to which part of project.
-David: Write regex and algorithm that search different kinds of names from java file
 
 ### Analysis
 
 * David Chen
+  * Write regex and algorithm that search different kinds of names from java file
 * Jude Sidloski
+  * Wrote the part of the program that traverses a project directory.
+  * Track nesting of code to determine what classes and methods names belong to.
+  * Designed data structure for a name object and the tree that holds all the names.
 * Ivan Zhang
   * Research resource of accuracy of WordNet words bank.
   * Using regex and WordNet to analysis each word in a name to check if the word match correct pattern of Java naming convention.
