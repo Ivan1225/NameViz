@@ -22,11 +22,11 @@ Data structure:
     "name": ,
     "parent": ,
     "position": ,
-    "subNames": [...],
+    "subNames": [],
     "type": ,
     "variableType": 
   },
-  ...
+  
 ]
 ```
 
@@ -62,7 +62,7 @@ we provide a smiple script to run our tool, which would do analysis first and th
 ## command
 
 ```
-
+./nameViz.sh [file path to target project folder]
 ```
 
 ## Demo
