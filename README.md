@@ -82,6 +82,10 @@ This part shows each member response to which part of project.
 * David Chen
 * Jude Sidloski
 * Ivan Zhang
+  * Research resource of accuracy of WordNet words bank.
+  * Analysis name with name type to check if it is outlier.
+  * Test with different name and name type combinations.
+  * Combine outlier result to output.
 
 ### Visualization
 
