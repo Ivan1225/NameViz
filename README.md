@@ -26,7 +26,7 @@ Data structure:
     "type": ,
     "variableType": 
   },
-  
+
 ]
 ```
 
@@ -49,9 +49,12 @@ Visualization:
 * [Analysis]()
 * [Visualization](./visulization/README.md)
 
-## Setup
+# Setup
 
-Follow information in detail
+Requirement:
+
+* Python 3.7.5
+* All packages in `requirements.txt`
 
 ## Usage
 
@@ -67,7 +70,7 @@ we provide a smiple script to run our tool, which would do analysis first and th
 
 ## Demo
 
-
+![demo](./resources/demo.gif)
 
 
 ## Work
