@@ -12,73 +12,64 @@ from os.path import dirname, join
 
 BASIC_TYPE = ['ClassName', 'InterfaceName', 'EnumName', 'MethodName', 'VariableName', 'ConstantName']
 
+
 def generate_source(original_data):
     # empty source data
     barchart_data = {}
 
     for classObj in original_data:
         file_name = classObj["fileName"]
-        cn_Outlier = cn_Correct = var_Outlier = var_Correct = method_Outlier=method_Correct=0
+        cn_Outlier = cn_Correct = var_Outlier = var_Correct = method_Outlier = method_Correct = const_Correct = const_Outlier = 0
         subNames = classObj["subNames"]
         while len(subNames) != 0:
             for name in classObj["subNames"]:
                 if name["type"] == "ClassName":
                     if name["isOutlier"]:
-                        error = name["errorMessage"]
                         cn_Outlier = cn_Outlier + 1
                     else:
-                        cn_Correct = correct + 1
-
+                        cn_Correct = cn_Correct + 1
                 if name["type"] == "VariableName":
                     if name["isOutlier"]:
-                        error = name["errorMessage"]
-                        outlier = outlier + 1
+                        var_Outlier = var_Outlier + 1
                     else:
-                        correct = correct + 1
-
+                        var_Correct = var_Correct + 1
                 if name["type"] == "ConstantName":
                     if name["isOutlier"]:
-                        error = name["errorMessage"]
-                        outlier = outlier + 1
+                        const_Outlier = const_Outlier + 1
                     else:
-                        correct = correct + 1
-                    barchart_data[file_name + "-" + "ConstantName"] = [correct, outlier]
+                        const_Correct = const_Correct + 1
                 if name["type"] == "MethodName":
                     if name["isOutlier"]:
                         error = name["errorMessage"]
-                        outlier = outlier + 1
+                        method_Outlier = method_Outlier + 1
                     else:
-                        correct = correct + 1
-        subNames = subNames["subNames"]
+                        method_Correct = method_Correct + 1
         barchart_data[file_name + "-" + "ClassName"] = [cn_Correct, cn_Outlier]
-        barchart_data[file_name + "-" + "VariableName"] = [var_Outlier, var_Outlier]
+        barchart_data[file_name + "-" + "VariableName"] = [var_Correct, var_Outlier]
+        barchart_data[file_name + "-" + "ConstantName"] = [const_Correct, const_Outlier]
         barchart_data[file_name + "-" + "MethodName"] = [method_Correct, method_Outlier]
     print(barchart_data)
     return barchart_data
 
 
 def barChart_tab(original_data):
-
-    #generate graph data source
+    # generate graph data source
     barchart_data = generate_source(original_data)
-
 
     print(barchart_data)
 
-   # orignal test data TODO: need to use the barchart_data above
+    # orignal test data TODO: need to use the barchart_data above
     className = ['Game', 'Flight', 'Animal']
     type = ['Class', 'Method', 'Variable', 'Constant']
     colors = ["#c9d9d3", "#718dbf", "#e84d60", "#392789"]
 
-
-
-    arr = np.array(np.meshgrid(className, type)).T.reshape(-1,2)
+    arr = np.array(np.meshgrid(className, type)).T.reshape(-1, 2)
     print(arr)
     x = ','.join(str(a) for a in arr)
     factors = "[" + str(x).replace('[', '(').replace(']', ')') + "]"
     print(factors)
 
-    // original fix test data
+    # original fix test data
     # factors = [
     #     (className[0], type[0]),
     #     (className[0], type[1]),
@@ -95,7 +86,6 @@ def barChart_tab(original_data):
     # ]
 
     result = ['correctNaming', 'outlier']
-
 
     source = ColumnDataSource(data=dict(
         x=factors,
