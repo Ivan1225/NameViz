@@ -54,8 +54,9 @@ def main(argv):
     for dirpath, dirs, files in os.walk(directory):
       for filename in files:
         fname = os.path.join(dirpath,filename)
+        relpath = os.path.relpath(fname, os.path.commonprefix([fname, os.getcwd()]))
         if fname.endswith('.java'):
-          topNode = Name(None, filename, fname, None, None, None, None, None)
+          topNode = Name(None, filename, relpath, None, None, None, None, None)
           currentNode = topNode
           data.append(currentNode)
           linecount = 0
@@ -68,15 +69,21 @@ def main(argv):
                   if '*/' in line:
                       line = line.split('*/')[1]
                       commented = False
-                  else:
-                    continue
+                  else: continue
               if '/*' in line:
-                  line = line.split('/*')[0]
+                  aline = line.split('/*')[0]
                   commented = True
                   if '*/' in line:
-                      line = line.split('*/')[1]
+                      bline = line.split('*/')[1]
                       commented = False
-              
+                      placeholder = ''
+                      i = 0
+                      while i < (line.find('*/') - line.find('/*')):
+                        placeholder = placeholder + ' '
+                        i += 1
+                      line = aline + placeholder + bline
+                  else: 
+                    line = aline
               classmatch = re.search('(?<=class)(\s)+[^\s]+', line)
               interfacematch = re.search('(?<=interface)(\s)+[^\s]+', line)
               enummatch = re.search('(?<=enum)(\s)+[^\s]+', line)
@@ -88,17 +95,17 @@ def main(argv):
               if line.strip().startswith('//'):
                   continue
               if classmatch != None:
-                newNode = Name(getClassLevelName(classmatch), filename, fname, linecount, calculatePos(classmatch), 'ClassName', None, currentNode)
+                newNode = Name(getClassLevelName(classmatch), filename, relpath, linecount, calculatePos(classmatch), 'ClassName', None, currentNode)
                 currentNode.addName(newNode)
                 stack.append('node')
                 currentNode = newNode
               elif interfacematch != None:
-                newNode = Name(getClassLevelName(interfacematch), filename, fname, linecount, calculatePos(interfacematch), 'InterfaceName', None, currentNode)
+                newNode = Name(getClassLevelName(interfacematch), filename, relpath, linecount, calculatePos(interfacematch), 'InterfaceName', None, currentNode)
                 currentNode.addName(newNode)
                 stack.append('node')
                 currentNode = newNode
               elif enummatch != None:
-                newNode = Name(getClassLevelName(enummatch), filename, fname, linecount, calculatePos(enummatch), 'EnumName', None, currentNode)
+                newNode = Name(getClassLevelName(enummatch), filename, relpath, linecount, calculatePos(enummatch), 'EnumName', None, currentNode)
                 currentNode.addName(newNode)
                 stack.append('node')
                 currentNode = newNode
@@ -108,10 +115,11 @@ def main(argv):
                 methodType = methodNameWithTypeArr[0]
                 if methodType not in ['new', 'else', 'throw']:
                   methodName = methodNameWithTypeArr[len(methodNameWithTypeArr)-1]
-                  newNode = Name(methodName, filename, fname, linecount, calculatePos(methodmatch), 'MethodName', None, currentNode)
-                  currentNode.addName(newNode)
-                  stack.append('node')
-                  currentNode = newNode
+                  if methodName != currentNode.name:
+                    newNode = Name(methodName, filename, relpath, linecount, calculatePos(methodmatch), 'MethodName', None, currentNode)
+                    currentNode.addName(newNode)
+                    stack.append('node')
+                    currentNode = newNode
               elif varmatch != []:
                 for match in varmatch:
                   nameWithType = match.group(0).strip()
@@ -125,7 +133,7 @@ def main(argv):
                         if (match[0] in cons):
                           nameType = 'ConstantName'
                           break
-                    newNode = Name(name, filename, fname, linecount, calculatePos(match), nameType, vartype, currentNode)
+                    newNode = Name(name, filename, relpath, linecount, calculatePos(match), nameType, vartype, currentNode)
                     currentNode.addName(newNode)
               if openbracketmatch != []:
                 for obracket in openbracketmatch:
