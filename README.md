@@ -73,6 +73,7 @@ we provide a smiple script to run our tool, which would do analysis first and th
 ## Work
 
 This part shows each member response to which part of project.
+David: Write regex and algorithm that search different kinds of names from java file
 
 ### Analysis
 
