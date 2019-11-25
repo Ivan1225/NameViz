@@ -1,112 +1,88 @@
-import json
-import sys
-from math import pi
-import pandas as pd
-import re
-from bokeh.io import show, output_file
-import numpy as np
-from bokeh.models import ColumnDataSource, FactorRange
+from bokeh.models import Panel, Plot, Circle, HoverTool, ColumnDataSource, LinearAxis
+from bokeh.models.widgets import CheckboxGroup, Select
+from bokeh.layouts import layout, column
 from bokeh.plotting import figure
-from bokeh.models import Panel
-from os.path import dirname, join
 
 BASIC_TYPE = ['ClassName', 'InterfaceName', 'EnumName', 'MethodName', 'VariableName', 'ConstantName']
+ALL_FILES = []
+
+COLORS = ["#c9d9d3", "#718dbf"]
+TYPE = ["normal", "outlier"]
 
 
-def generate_source(original_data):
-    # empty source data
-    barchart_data = {}
+def add_name(data, e, selected_type):
+    name_type = e["type"]
+    name = e["name"]
 
-    for classObj in original_data:
-        file_name = classObj["fileName"]
-        cn_Outlier = cn_Correct = var_Outlier = var_Correct = method_Outlier = method_Correct = const_Correct = const_Outlier = 0
-        subNames = classObj["subNames"]
-        while len(subNames) != 0:
-            for name in classObj["subNames"]:
-                if name["type"] == "ClassName":
-                    if name["isOutlier"]:
-                        cn_Outlier = cn_Outlier + 1
-                    else:
-                        cn_Correct = cn_Correct + 1
-                if name["type"] == "VariableName":
-                    if name["isOutlier"]:
-                        var_Outlier = var_Outlier + 1
-                    else:
-                        var_Correct = var_Correct + 1
-                if name["type"] == "ConstantName":
-                    if name["isOutlier"]:
-                        const_Outlier = const_Outlier + 1
-                    else:
-                        const_Correct = const_Correct + 1
-                if name["type"] == "MethodName":
-                    if name["isOutlier"]:
-                        error = name["errorMessage"]
-                        method_Outlier = method_Outlier + 1
-                    else:
-                        method_Correct = method_Correct + 1
-        barchart_data[file_name + "-" + "ClassName"] = [cn_Correct, cn_Outlier]
-        barchart_data[file_name + "-" + "VariableName"] = [var_Correct, var_Outlier]
-        barchart_data[file_name + "-" + "ConstantName"] = [const_Correct, const_Outlier]
-        barchart_data[file_name + "-" + "MethodName"] = [method_Correct, method_Outlier]
-    print(barchart_data)
-    return barchart_data
+    if name_type in selected_type and name is not None:
+        index = selected_type.index(name_type)
+        if e["isOutlier"]:
+            data["outlier"][index] += 1
+        else:
+            data["normal"][index] += 1
+
+    for sub in e["subNames"]:
+        add_name(data, sub, selected_type)
 
 
-def barChart_tab(original_data):
-    # generate graph data source
-    barchart_data = generate_source(original_data)
+def generate_source(original_data, selected_type, selected_file):
+    data = {"type": selected_type, "normal": [0] * len(selected_type), "outlier": [0] * len(selected_type)}
 
-    print(barchart_data)
+    for name in original_data:
+        file_path = name["filePath"]
+        if not file_path == selected_file:
+            continue
+        add_name(data, name, selected_type)
 
-    # orignal test data TODO: need to use the barchart_data above
-    className = ['Game', 'Flight', 'Animal']
-    type = ['Class', 'Method', 'Variable', 'Constant']
-    colors = ["#c9d9d3", "#718dbf", "#e84d60", "#392789"]
+    print(data)
 
-    arr = np.array(np.meshgrid(className, type)).T.reshape(-1, 2)
-    print(arr)
-    x = ','.join(str(a) for a in arr)
-    factors = "[" + str(x).replace('[', '(').replace(']', ')') + "]"
-    print(factors)
+    return data
 
-    # original fix test data
-    # factors = [
-    #     (className[0], type[0]),
-    #     (className[0], type[1]),
-    #     (className[0], type[2]),
-    #     (className[0], type[3]),
-    #     (className[1], type[0]),
-    #     (className[1], type[1]),
-    #     (className[1], type[2]),
-    #     (className[1], type[3]),
-    #     (className[2], type[0]),
-    #     (className[2], type[1]),
-    #     (className[2], type[2]),
-    #     (className[2], type[3]),
-    # ]
 
-    result = ['correctNaming', 'outlier']
+def generate_plot(data, selected_type):
+    p = figure(x_range=selected_type, plot_height=350, title="Outlier count by type",
+               toolbar_location=None, tools="hover", tooltips="$name @type: @$name")
 
-    source = ColumnDataSource(data=dict(
-        x=factors,
-        correctNaming=[5, 5, 6, 5, 5, 4, 5, 6, 7, 8, 6, 9],
-        outlier=[5, 7, 9, 4, 5, 4, 7, 7, 7, 6, 6, 7],
-    ))
-
-    p = figure(x_range=FactorRange(*factors), plot_height=250,
-               toolbar_location=None, tools="")
-
-    p.vbar_stack(result, x='x', width=0.9, alpha=0.5, color=["blue", "red"], source=source,
-                 legend_label=result)
+    p.vbar_stack(TYPE, x='type', width=0.9, source=data, color=COLORS, legend_label=TYPE)
 
     p.y_range.start = 0
-    p.y_range.end = 18
     p.x_range.range_padding = 0.1
-    p.xaxis.major_label_orientation = 1
     p.xgrid.grid_line_color = None
-    p.legend.location = "top_center"
+    p.axis.minor_tick_line_color = None
+    p.outline_line_color = None
+    p.legend.location = "top_left"
     p.legend.orientation = "horizontal"
 
-    show(p)
-    tab = Panel(child=p, title='Bar Chart Graph')
+    return p
+
+
+def bar_tab(original_data):
+    selected_type = BASIC_TYPE
+
+    for e in original_data:
+        fp = e["filePath"]
+        if fp not in ALL_FILES:
+            ALL_FILES.append(fp)
+
+    selected_file = ALL_FILES[0]
+
+    source = generate_source(original_data, selected_type, selected_file)
+
+    bar_plot = generate_plot(source, selected_type)
+
+    def update(attr, old, new):
+        selected_type = [types_selection.labels[i] for i in types_selection.active]
+        selected_file = files_selection.value
+        new_bar_plot = generate_plot(generate_source(original_data, selected_type, selected_file), selected_type)
+        p_layout.children[0].children[1] = new_bar_plot
+
+    types_selection = CheckboxGroup(labels=BASIC_TYPE, active=list(range(len(BASIC_TYPE))))
+    types_selection.on_change('active', update)
+    files_selection = Select(title="Selected file:", value=selected_file, options=ALL_FILES)
+    files_selection.on_change('value', update)
+
+    sliders = column(files_selection, types_selection)
+    p_layout = layout([[sliders, bar_plot]])
+
+    tab = Panel(child=p_layout, title='Bar chart')
     return tab
