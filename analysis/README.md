@@ -5,6 +5,11 @@ Search and analysis the name in the java file.
 * jsonpickle 1.2
 * nltk 3.4.5
 * six 1.13.0
+## Usage
+Get into the analysis folder and run following command in terminal.
+```
+python3 search.py -d [INPUT_DICTORY_PATH] -o [OUTPUT_PATH]
+```
 ## Rules of Analysis Naming Convention
 We use WordNet lexical database to analysis if a word is possible a noun or adjective or verb, etc. We set up different rules for different types of name:
 * Class Name
