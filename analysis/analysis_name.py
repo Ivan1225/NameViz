@@ -33,9 +33,9 @@ def class_name_helper(name):
     if name[0].isupper():
         last_word = camel_case_split(name)[-1]
         synsets = check_sysnsets(last_word)
-        # for word in camel_case_split(name):
-        #     if not bool(check_sysnsets(word)):
-        #         raise Exception('Unknown word: '+word+', or you should use camel case for class name')
+        for word in camel_case_split(name):
+            if not bool(check_sysnsets(word)):
+                raise Exception('Unknown word: '+word+', or you should use camel case for class name')
         if 'n' in synsets:
             return True
         else:
@@ -47,9 +47,9 @@ def enum_name_helper(name):
     if name[0].isupper():
         last_word = camel_case_split(name)[-1]
         synsets = check_sysnsets(last_word)
-        # for word in camel_case_split(name):
-        #     if not bool(check_sysnsets(word)):
-        #         raise Exception('Unknown word: '+word+', or you should use camel case for enum name')
+        for word in camel_case_split(name):
+            if not bool(check_sysnsets(word)):
+                raise Exception('Unknown word: '+word+', or you should use camel case for enum name')
         if 'n' in synsets:
             return True
         else:
@@ -62,9 +62,9 @@ def interface_name_helper(name):
     if name[0].isupper():
         last_word = camel_case_split(name)[-1]
         synsets = check_sysnsets(last_word)
-        # for word in camel_case_split(name):
-        #     if not bool(check_sysnsets(word)):
-        #         raise Exception('Unknown word: '+word+', or you should use camel case for interface name')
+        for word in camel_case_split(name):
+            if not bool(check_sysnsets(word)):
+                raise Exception('Unknown word: '+word+', or you should use camel case for interface name')
         if 'a' in synsets:
             return True
         else:
@@ -78,9 +78,9 @@ def method_name_helper(name):
       words = camel_case_split(name)
       first_word_synsets = check_sysnsets(words[0]) 
       last_word_synsets = check_sysnsets(words[-1]) 
-    #   for word in words:
-    #       if not bool(check_sysnsets(word)):
-    #           raise Exception('Unknown word: '+word+', or you should use camel case for method name')
+      for word in words:
+          if not bool(check_sysnsets(word)):
+              raise Exception('Unknown word: '+word+', or you should use camel case for method name')
       if 'v' in first_word_synsets or 'r' in first_word_synsets or 'v' in last_word_synsets:
           return True
       else:
@@ -95,9 +95,9 @@ def variable_name_helper(name):
         raise Exception('Avoid using one-character variables name')
       if not check_start_with_special_char(name):
           raise Exception('Variable name should not start with the special characters')
-    #   for word in words:
-    #       if not bool(check_sysnsets(word)):
-    #           raise Exception('Unknown word: '+word+', or you should use camel case for variable name')
+      for word in words:
+          if not bool(check_sysnsets(word)):
+              raise Exception('Unknown word: '+word+', or you should use camel case for variable name')
       return True
     else:
         raise Exception('Variable name should start with the lowercase letter')
@@ -109,9 +109,9 @@ def constant_name_helper(name):
             raise Exception('Constant name should not start with the special characters')
         if name[0].isdigit():
             raise Exception('Constant name first letter should not be digit')
-        # for word in name.split("_"):
-        #     if not bool(check_sysnsets(word)):
-        #         raise Exception('Unknown word: '+word+', or you should use snake case for constant name')
+        for word in name.split("_"):
+            if not bool(check_sysnsets(word)):
+                raise Exception('Unknown word: '+word+', or you should use snake case for constant name')
         return True
     else:
         raise Exception('Constant name should all upper case')
