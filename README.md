@@ -91,8 +91,12 @@ David: Write regex and algorithm that search different kinds of names from java 
 ### Visualization
 
 * Estella Wang
+   * Explored the usage of Bokeh and Pandas library to facilate our visualization
+   * Mainly worked on implementation of bar chart
+   * Added hover effects and filter for user interaction
+   
 * Frank Yan
-  * build outer frame for visualization
-  * mainly worked on implementation of node graph, pie chart and scatter plot.
-  * add simple filiter allow users to foucus on part of project thery want to do visualization.
+  * Build outer frame for visualization
+  * Mainly worked on implementation of node graph, pie chart and scatter plot.
+  * Add simple filiter allow users to foucus on part of project thery want to do visualization.
 
