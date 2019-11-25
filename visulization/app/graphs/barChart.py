@@ -1,45 +1,101 @@
 import json
+import sys
 from math import pi
 import pandas as pd
-
+import re
 from bokeh.io import show, output_file
+import numpy as np
 from bokeh.models import ColumnDataSource, FactorRange
 from bokeh.plotting import figure
 from bokeh.models import Panel
-
+from os.path import dirname, join
 
 BASIC_TYPE = ['ClassName', 'InterfaceName', 'EnumName', 'MethodName', 'VariableName', 'ConstantName']
 
-BASIC_TYPE_COLORS = {}
-COLORS = Set1[len(BASIC_TYPE)+1]
+def generate_source(original_data):
+    # empty source data
+    barchart_data = {}
 
-for i in range(len(BASIC_TYPE)):
-    BASIC_TYPE_COLORS[BASIC_TYPE[i]] = COLORS[i+1]
+    for classObj in original_data:
+        file_name = classObj["fileName"]
+        cn_Outlier = cn_Correct = var_Outlier = var_Correct = method_Outlier=method_Correct=0
+        subNames = classObj["subNames"]
+        while len(subNames) != 0:
+            for name in classObj["subNames"]:
+                if name["type"] == "ClassName":
+                    if name["isOutlier"]:
+                        error = name["errorMessage"]
+                        cn_Outlier = cn_Outlier + 1
+                    else:
+                        cn_Correct = correct + 1
 
-def barChart_tab(data):
-    # with open('Test Data/package.json') as f:
-    #     testData = json.load(f)
-    #
-    # correctNum = outlier = 0
-    #
-    # for data in testData:
-    #     print('isOutlier: ' + str(o['isOutlier']))
-    #     if data['fileName']:
-    #         correctNum = correctNum + 1
-    #     else:
-    #         outlier = outlier + 1
+                if name["type"] == "VariableName":
+                    if name["isOutlier"]:
+                        error = name["errorMessage"]
+                        outlier = outlier + 1
+                    else:
+                        correct = correct + 1
 
+                if name["type"] == "ConstantName":
+                    if name["isOutlier"]:
+                        error = name["errorMessage"]
+                        outlier = outlier + 1
+                    else:
+                        correct = correct + 1
+                    barchart_data[file_name + "-" + "ConstantName"] = [correct, outlier]
+                if name["type"] == "MethodName":
+                    if name["isOutlier"]:
+                        error = name["errorMessage"]
+                        outlier = outlier + 1
+                    else:
+                        correct = correct + 1
+        subNames = subNames["subNames"]
+        barchart_data[file_name + "-" + "ClassName"] = [cn_Correct, cn_Outlier]
+        barchart_data[file_name + "-" + "VariableName"] = [var_Outlier, var_Outlier]
+        barchart_data[file_name + "-" + "MethodName"] = [method_Correct, method_Outlier]
+    print(barchart_data)
+    return barchart_data
+
+
+def barChart_tab(original_data):
+
+    #generate graph data source
+    barchart_data = generate_source(original_data)
+
+
+    print(barchart_data)
+
+   # orignal test data TODO: need to use the barchart_data above
     className = ['Game', 'Flight', 'Animal']
     type = ['Class', 'Method', 'Variable', 'Constant']
     colors = ["#c9d9d3", "#718dbf", "#e84d60", "#392789"]
 
-    factors = [
-        (className[0], type[0]), (className[0], type[1]), (className[0], type[2]), (className[0], type[3]),
-        (className[1], type[0]), (className[1], type[1]), (className[1], type[2]), (className[1], type[3]),
-        (className[2], type[0]), (className[2], type[1]), (className[2], type[2]), (className[2], type[3]),
-    ]
+
+
+    arr = np.array(np.meshgrid(className, type)).T.reshape(-1,2)
+    print(arr)
+    x = ','.join(str(a) for a in arr)
+    factors = "[" + str(x).replace('[', '(').replace(']', ')') + "]"
+    print(factors)
+
+    // original fix test data
+    # factors = [
+    #     (className[0], type[0]),
+    #     (className[0], type[1]),
+    #     (className[0], type[2]),
+    #     (className[0], type[3]),
+    #     (className[1], type[0]),
+    #     (className[1], type[1]),
+    #     (className[1], type[2]),
+    #     (className[1], type[3]),
+    #     (className[2], type[0]),
+    #     (className[2], type[1]),
+    #     (className[2], type[2]),
+    #     (className[2], type[3]),
+    # ]
 
     result = ['correctNaming', 'outlier']
+
 
     source = ColumnDataSource(data=dict(
         x=factors,
@@ -61,5 +117,6 @@ def barChart_tab(data):
     p.legend.location = "top_center"
     p.legend.orientation = "horizontal"
 
+    show(p)
     tab = Panel(child=p, title='Bar Chart Graph')
     return tab
