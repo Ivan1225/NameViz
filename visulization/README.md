@@ -9,13 +9,6 @@ Currently, we have two tabs to help the user:
 
 ![Visulization Demo](./resources/demo.gif)
 
-# Setup
-
-Requirement:
-
-* Python 3.6.5
-* All packages in `requirements.txt`
-
 # Usage
 
 ### comand
