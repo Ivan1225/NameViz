@@ -46,7 +46,7 @@ Visualization:
 
 ## Detail
 
-* [Analysis]()
+* [Analysis](./analysis/README.md)
 * [Visualization](./visulization/README.md)
 
 # Setup
@@ -87,7 +87,7 @@ This part shows each member response to which part of project.
   * Designed data structure for a name object and the tree that holds all the names.
 * Ivan Zhang
   * Research resource of accuracy of WordNet words bank.
-  * Using regex and WordNet to analysis each word in a name to check if the word match correct pattern of Java naming convention.
+  * Using regex and WordNet to lexically analysis each word in a name to check if the word match correct pattern of Java naming convention.
   * Test with different name and name type combinations.
   * Combine outlier result to output.
 
